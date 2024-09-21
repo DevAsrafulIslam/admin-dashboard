@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import BackButton from "@/components/BackButton";
-import { Form } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import posts from "@/data/posts";
 const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required",
@@ -37,7 +37,7 @@ interface PostEditPageProps {
   };
 }
 const PostEditPage = ({ params }: PostEditPageProps) => {
-  const post = posts.find((post) => post.id === params(params.id));
+  const post = posts.find((post) => post.id === params.id);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,10 +56,10 @@ const PostEditPage = ({ params }: PostEditPageProps) => {
       <BackButton text="Back to Post" link="/posts" />
       <h3 className="text-2xl mb-4">Edit Post</h3>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="username"
+            name="title"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username</FormLabel>

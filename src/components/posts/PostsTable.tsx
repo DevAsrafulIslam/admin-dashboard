@@ -1,5 +1,4 @@
 import Link from "next/link";
-import posts from "../../../data/posts";
 import {
   Table,
   TableBody,
@@ -9,6 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import posts from "@/data/posts";
+import { Post } from "@/types/posts";
 
 interface PostTableProps {
   limit?: number;
