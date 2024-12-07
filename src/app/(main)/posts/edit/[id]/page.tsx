@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import BackButton from "@/components/BackButton";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,6 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import posts from "@/data/posts";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 const formSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required",
@@ -37,6 +39,7 @@ interface PostEditPageProps {
   };
 }
 const PostEditPage = ({ params }: PostEditPageProps) => {
+  const { toast } = useToast();
   const post = posts.find((post) => post.id === params.id);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,22 +52,32 @@ const PostEditPage = ({ params }: PostEditPageProps) => {
   });
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    toast({
+      title: "Post has been updated successfully",
+      description: `Update by ${post?.author} on ${post?.date}`,
+    });
   };
   return (
     <>
       <BackButton text="Back to Post" link="/posts" />
       <h3 className="text-2xl mb-4">Edit Post</h3>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
           <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
+              // Title
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+                  Title
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input
+                    className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                    placeholder="Enter Title"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   This is your public display name.
@@ -73,7 +86,78 @@ const PostEditPage = ({ params }: PostEditPageProps) => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          {/* Body */}
+          <FormField
+            control={form.control}
+            name="body"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+                  Body
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                    placeholder="Enter Body"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Author */}
+          <FormField
+            control={form.control}
+            name="author"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+                  Author
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                    placeholder="Enter Author"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Date */}
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-white">
+                  Date
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="bg-slate-100 dark:bg-slate-500 border-0 focus-visible:ring-0 text-black dark:text-white focus-visible:ring-offset-0"
+                    placeholder="Enter Date"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button className="w-full dark:bg-slate-800 dark:text-white">
+            Update Post
+          </Button>
         </form>
       </Form>
     </>
